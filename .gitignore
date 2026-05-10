@@ -1,0 +1,8 @@
+docker-compose.yml
+*.log
+iespien-specs.txt
+prompt.txt
+cache/*.*
+README.md.github
+
+README.md.codeberg
