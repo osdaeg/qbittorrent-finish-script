@@ -47,9 +47,9 @@ Todos deben estar corriendo como contenedores Docker.
 | [qBittorrent](https://github.com/qbittorrent/qBittorrent) + [Gluetun](https://github.com/qdm12/gluetun) | 8081 | Cliente de torrents con VPN |
 | [Gotify](https://gotify.net/) | 8088 | Notificaciones push |
 | [clamav-rest-api](https://github.com/benzino77/clamav-rest-api) | 3311 | Escaneo antivirus |
-| [Transferr](https://github.com/osdaeg/transferr) | 7900 | Copia de archivos entre volúmenes Docker |
-| [Butler-API](https://github.com/osdaeg/butler) | 7999 | Generación de fichas HTML con Gemini |
-| [Paste.sh](https://github.com/osdaeg/paste.sh) | 8090 | Almacenamiento de logs de error |
+| [Transferr](https://codeberg.org/osdaeg/transferr) | 7900 | Copia de archivos entre volúmenes Docker |
+| [Butler-API](https://codeberg.org/osdaeg/butler) | 7999 | Generación de fichas HTML con Gemini |
+| [Paste.sh](https://codeberg.org/osdaeg/paste.sh) | 8090 | Almacenamiento de logs de error |
 | [Sonarr](https://sonarr.tv/) | 8989 | Gestión de series |
 | [Radarr](https://radarr.video/) | 7878 | Gestión de películas |
 
@@ -67,7 +67,7 @@ Gluetun es opcional
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/osdaeg/qbittorrent-finish-script.git
+git clone https://codeberg.org/osdaeg/qbittorrent-finish-script.git
 cd qbittorrent-finish-script
 ```
 
