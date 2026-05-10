@@ -44,9 +44,9 @@ Todos deben estar corriendo como contenedores Docker.
 
 | Servicio | Puerto | Función |
 |---|---|---|
-| [qBittorrent](https://github.com/qbittorrent/qBittorrent) + [Gluetun](https://github.com/qdm12/gluetun) | 8081 | Cliente de torrents con VPN |
+| [qBittorrent](https://codeberg.org/qbittorrent/qBittorrent) + [Gluetun](https://codeberg.org/qdm12/gluetun) | 8081 | Cliente de torrents con VPN |
 | [Gotify](https://gotify.net/) | 8088 | Notificaciones push |
-| [clamav-rest-api](https://github.com/benzino77/clamav-rest-api) | 3311 | Escaneo antivirus |
+| [clamav-rest-api](https://codeberg.org/benzino77/clamav-rest-api) | 3311 | Escaneo antivirus |
 | [Transferr](https://codeberg.org/osdaeg/transferr) | 7900 | Copia de archivos entre volúmenes Docker |
 | [Butler-API](https://codeberg.org/osdaeg/butler) | 7999 | Generación de fichas HTML con Gemini |
 | [Paste.sh](https://codeberg.org/osdaeg/paste.sh) | 8090 | Almacenamiento de logs de error |
