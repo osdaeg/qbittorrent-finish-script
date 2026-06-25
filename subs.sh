@@ -20,6 +20,7 @@ source /home/daniel/docker/downloads/qbittorrent/config/finish.env
 
 SUBS_POOL="/home/daniel/docker/downloads/qbittorrent/config/subs"
 LOG_FILE="subs.log"
+TRANSLATE_SRT_SCRIPT="/home/daniel/docker/downloads/qbittorrent/config/translate_srt.py"
 
 # =============================================================================
 # FUNCIONES
@@ -40,6 +41,43 @@ gotify_notify() {
         -F "message=${message}" \
         -F "priority=${priority}" \
         -o /dev/null
+}
+
+# Traduce un .srt en inglés a español usando LibreTranslate (a demanda)
+# $1 = ruta del .srt a traducir (se sobreescribe)
+translate_srt_if_needed() {
+    local srt_path="$1"
+
+    if [ ! -f "$TRANSLATE_SRT_SCRIPT" ]; then
+        log "[TRANSLATE] Script no encontrado: ${TRANSLATE_SRT_SCRIPT}. Saltando traducción."
+        return 1
+    fi
+
+    log "[TRANSLATE] Iniciando LibreTranslate..."
+    docker start libretranslate > /dev/null 2>&1
+
+    log "[TRANSLATE] Esperando que la API esté lista..."
+    local retries=0
+    until curl -sf http://localhost:5445/health > /dev/null; do
+        sleep 3
+        retries=$((retries + 1))
+        if [ $retries -ge 20 ]; then
+            log "[TRANSLATE] Timeout esperando LibreTranslate."
+            docker stop libretranslate > /dev/null 2>&1
+            return 1
+        fi
+    done
+
+    log "[TRANSLATE] Traduciendo: ${srt_path}"
+    if python3 "$TRANSLATE_SRT_SCRIPT" "$srt_path"; then
+        log "[TRANSLATE] Traducción completada."
+        docker stop libretranslate > /dev/null 2>&1
+        return 0
+    else
+        log "[TRANSLATE] Error durante la traducción."
+        docker stop libretranslate > /dev/null 2>&1
+        return 1
+    fi
 }
 
 # Busca subtítulos en OpenSubtitles y devuelve el primer file_id encontrado
@@ -288,13 +326,23 @@ No se encontró subtítulo." 3
     if [ -f "$srt_path" ] && [ -s "$srt_path" ]; then
         log "Subtítulo guardado: ${srt_path}"
 
+        # Si el sub descargado es en inglés, traducirlo a español
+        local display_lang="$found_lang"
+        if [[ "$found_lang" == *"inglés"* ]]; then
+            if translate_srt_if_needed "$srt_path"; then
+                display_lang="español (traducido desde inglés)"
+            else
+                display_lang="inglés (traducción fallida)"
+            fi
+        fi
+
         mkdir -p "$SUBS_POOL"
         local srt_clean="${SUBS_POOL}/${query}${year_str}.srt"
         cp "$srt_path" "$srt_clean"
         log "Subtítulo copiado a subs pool: ${srt_clean}"
 
         gotify_notify "🔤 Subtítulo descargado" "📁 ${video_name}
-🌐 Idioma: ${found_lang}" 3
+🌐 Idioma: ${display_lang}" 3
     else
         log "Error: el archivo de subtítulo quedó vacío o no se creó."
         rm -f "$srt_path"
